@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Rita Lätt</title>
+  <meta name="description" content="Lär dig rita steg för steg">
+  <meta name="theme-color" content="#FFF8EC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Rita Lätt">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Startsida -->
+  <main id="home" class="screen">
+    <header class="home-head">
+      <h1>🎨 Rita Lätt</h1>
+      <p>Vad vill du rita idag?</p>
+    </header>
+    <div id="grid" class="grid"></div>
+    <div id="install-hint" class="install-hint" hidden>
+      <span>Tips till förälder: tryck på <b>Dela</b> <span aria-hidden="true">⬆️</span> och välj <b>Lägg till på hemskärmen</b> för att få en ikon.</span>
+      <button id="hint-close" aria-label="Stäng">✕</button>
+    </div>
+  </main>
+
+  <!-- Ritsida -->
+  <main id="draw" class="screen" hidden>
+    <header class="topbar">
+      <button id="btn-home" class="round" aria-label="Hem">🏠</button>
+      <div class="instruction">
+        <div id="dots" class="dots"></div>
+        <div id="step-text" class="step-text"></div>
+      </div>
+      <button id="btn-speak" class="round" aria-label="Läs upp">🔊</button>
+      <button id="btn-guide" class="round" aria-label="Visa eller göm hjälplinjer">👁️</button>
+    </header>
+
+    <div id="stage" class="stage">
+      <canvas id="c-color"></canvas>
+      <svg id="guide" viewBox="-4 -4 108 108" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+      <canvas id="c-line"></canvas>
+    </div>
+
+    <footer class="toolbar">
+      <div class="tools">
+        <button id="tool-pen" class="tool" aria-label="Penna">✏️</button>
+        <button id="tool-eraser" class="tool" aria-label="Sudd">🧽</button>
+        <div class="sizes" id="sizes">
+          <button class="size" data-size="0" aria-label="Smal"><i style="--d:8px"></i></button>
+          <button class="size" data-size="1" aria-label="Mellan"><i style="--d:16px"></i></button>
+          <button class="size" data-size="2" aria-label="Tjock"><i style="--d:28px"></i></button>
+        </div>
+        <button id="btn-undo" class="tool" aria-label="Ångra">↩️</button>
+        <button id="btn-clear" class="tool" aria-label="Rensa allt">🗑️</button>
+      </div>
+      <div id="palette" class="palette"></div>
+      <div class="nav">
+        <button id="btn-prev" class="navbtn prev" aria-label="Förra steget">◀</button>
+        <button id="btn-next" class="navbtn next">Nästa ▶</button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Klar! -->
+  <div id="done" class="done" hidden>
+    <div id="confetti" class="confetti"></div>
+    <div class="done-card">
+      <h2>⭐ Bra jobbat! ⭐</h2>
+      <img id="done-img" alt="Din teckning">
+      <div class="done-buttons">
+        <button id="btn-save" class="big">💾 Spara bild</button>
+        <button id="btn-continue" class="big alt">✏️ Rita mer</button>
+        <button id="btn-new" class="big">🎨 Ny teckning</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="lessons.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
