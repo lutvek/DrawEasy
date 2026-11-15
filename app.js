@@ -265,16 +265,63 @@
     return lesson.steps[step].text;
   }
 
-  function speak(text) {
-    if (!soundOn || !('speechSynthesis' in window)) return;
+  // ---------- Uppläsning på svenska ----------
+  let voices = [], voiceWarned = false;
+  const hasSpeech = 'speechSynthesis' in window;
+  function loadVoices() { if (hasSpeech) voices = speechSynthesis.getVoices() || []; }
+  function swedishVoice() {
+    const sv = voices.filter((v) => /^sv([-_]|$)/i.test(v.lang || ''));
+    if (!sv.length) return null;
+    const score = (v) => (/alva|klara|oskar|svenska|swedish/i.test(v.name) ? 2 : 0) +
+      (/premium|enhanced|förbättrad/i.test(v.name) ? 3 : 0) + (v.localService ? 1 : 0);
+    return sv.sort((x, y) => score(y) - score(x))[0];
+  }
+  if (hasSpeech) {
+    loadVoices();
+    speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', loadVoices);
+  }
+  function speakNow(text) {
+    loadVoices();
+    const v = swedishVoice();
+    if (voices.length && !v) {
+      // Enheten har röster men ingen svensk: var hellre tyst än läs svenska med fel röst.
+      if (!voiceWarned) { voiceWarned = true; $('voice-hint').hidden = false; }
+      return;
+    }
     try {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'sv-SE'; u.rate = 0.9; u.pitch = 1.1;
-      const v = speechSynthesis.getVoices().find((x) => x.lang && x.lang.toLowerCase().startsWith('sv'));
+      u.lang = v ? v.lang.replace('_', '-') : 'sv-SE';
       if (v) u.voice = v;
+      u.rate = 0.9;
       speechSynthesis.speak(u);
     } catch (e) { /* ok */ }
+  }
+  function speak(text) {
+    if (!soundOn || !hasSpeech) return;
+    loadVoices();
+    if (voices.length) return speakNow(text);
+    // Rösterna laddas ibland lite senare: vänta kort innan vi läser.
+    let done = false;
+    const go = () => { if (!done) { done = true; speakNow(text); } };
+    speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', go, { once: true });
+    setTimeout(go, 600);
+  }
+
+  // Delar en bana i separata streck och ritar dem ett i taget.
+  const STROKE_MS = 1100, STROKE_GAP = 250;
+  function strokeParts(d) { return d.split(/(?=M)/).map((x) => x.trim()).filter(Boolean); }
+  function strokeAnim(d, cls, start, fadeAfter) {
+    const parts = strokeParts(d);
+    const total = start + parts.length * (STROKE_MS + STROKE_GAP);
+    let html = '';
+    parts.forEach((p, i) => {
+      const delay = start + i * (STROKE_MS + STROKE_GAP);
+      let anim = `pdraw ${STROKE_MS}ms ease-in-out ${delay}ms 1 forwards`;
+      if (fadeAfter) anim += `, pfade 500ms linear ${total}ms 1 forwards`;
+      html += `<path class="${cls}" pathLength="1" style="animation:${anim}" d="${p}"/>`;
+    });
+    return { html, end: total };
   }
 
   function renderGuide() {
@@ -283,7 +330,7 @@
     let html = '';
     lesson.steps.forEach((s, i) => {
       if (i < step) html += `<path class="old" d="${s.d}"/>`;
-      else if (i === step) html += `<path class="now" d="${s.d}"/><path class="demo" pathLength="1" d="${s.d}"/>`;
+      else if (i === step) html += `<path class="now" d="${s.d}"/>` + strokeAnim(s.d, 'demo', 250, true).html;
     });
     g.innerHTML = html;
   }
@@ -416,7 +463,13 @@
   function paperMarks(l, upto, animate) {
     const erasedBy = {};
     l.steps.forEach((s, i) => { for (const id of (s.erase || [])) erasedBy[id] = i; });
-    let fills = '', lines = '';
+    let fills = '', lines = '', t = 300;
+    const line = (d, tone, cur, extra) => {
+      if (!cur) return `<path class="${tone}${extra}" d="${d}"/>`;
+      const a = strokeAnim(d, tone + ' cur seq', t, false);
+      t = a.end;
+      return a.html;
+    };
     l.steps.forEach((s, i) => {
       if (i > upto) return;
       const gone = erasedBy[s.id];
@@ -424,12 +477,10 @@
       if (gone !== undefined && gone === upto && !animate) return;
       const erasing = gone === upto ? ' erasing' : '';
       const cur = animate && i === upto;
-      const lc = cur ? ' cur draw' : erasing;
-      const pl = cur ? ' pathLength="1"' : '';
       if (s.fillHatch) fills += `<path class="fh${cur ? ' fillin' : ''}" d="${s.fillHatch}"/>`;
       if (s.fillDark) fills += `<path class="fd${cur ? ' fillin' : ''}" d="${s.fillDark}"/>`;
-      if (s.light) lines += `<path class="light tl${lc}"${pl} d="${s.light}"/>`;
-      if (s.dark) lines += `<path class="dark${lc}"${pl} d="${s.dark}"/>`;
+      if (s.light) lines += line(s.light, 'light tl', cur, erasing);
+      if (s.dark) lines += line(s.dark, 'dark', cur, erasing);
       for (const d of (s.dots || [])) {
         lines += `<circle class="dot${cur ? ' cur' : erasing}" cx="${d[0]}" cy="${d[1]}" r="1.1"/>`;
       }
@@ -516,7 +567,6 @@
   // ---------- Start ----------
   window.addEventListener('resize', resize);
   window.addEventListener('orientationchange', () => setTimeout(resize, 200));
-  if ('speechSynthesis' in window) speechSynthesis.getVoices();
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -528,6 +578,8 @@
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
+
+  $('voice-hint-close').onclick = () => { $('voice-hint').hidden = true; };
 
   renderPalette();
   renderSound();

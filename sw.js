@@ -1,5 +1,5 @@
 // Enkel service worker: hämta alltid senaste från nätet, använd cache som reserv.
-const CACHE = 'rita-latt-v3';
+const CACHE = 'rita-latt-v4';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', (e) => {

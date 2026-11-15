@@ -99,11 +99,8 @@ button {
 #guide path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
 #guide .old { stroke: #c9ccd6; stroke-width: 1; }
 #guide .now { stroke: var(--accent); stroke-width: 1.3; stroke-dasharray: 2.6 2.6; opacity: .9; }
-#guide .demo {
-  stroke: #FF6B6B; stroke-width: 2.2; opacity: 0;
-  stroke-dasharray: 1; stroke-dashoffset: 1;
-  animation: demo 2.4s ease-in-out .25s 1 forwards;
-}
+#guide .demo { stroke: #FF6B6B; stroke-width: 2.2; opacity: .9; stroke-dasharray: 1; stroke-dashoffset: 1; }
+@keyframes pfade { to { opacity: 0; } }
 @keyframes demo {
   0% { stroke-dashoffset: 1; opacity: .9; }
   75% { stroke-dashoffset: 0; opacity: .9; }
@@ -202,7 +199,7 @@ button {
 #p-svg .cur { stroke: var(--accent); }
 #p-svg .cur.light { stroke-width: .9; }
 #p-svg .cur.dark { stroke-width: 1.3; }
-#p-svg .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pdraw 2.6s ease-in-out .3s 1 forwards; }
+#p-svg .seq { stroke-dasharray: 1; stroke-dashoffset: 1; }
 @keyframes pdraw { to { stroke-dashoffset: 0; } }
 #p-svg .dot.cur { fill: var(--accent); animation: pulse 1s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
 @keyframes pulse { to { transform: scale(1.7); } }
@@ -226,3 +223,11 @@ button {
 .chip.press.hard { background: #2B2D42; color: #fff; }
 .chip:empty { display: none; }
 .done.paper-done img, .done.paper-done #btn-save, .done.paper-done #btn-continue { display: none; }
+
+.voice-hint {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 20; padding: 12px 14px;
+  background: #fff; border-radius: 16px; box-shadow: 0 2px 14px rgba(0, 0, 0, .25);
+  display: flex; align-items: center; gap: 10px; font-size: 15px; font-family: system-ui, sans-serif;
+  max-width: 720px; margin: 0 auto;
+}
+.voice-hint button { background: #eee; border-radius: 50%; width: 34px; height: 34px; flex: none; }
