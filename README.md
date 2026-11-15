@@ -42,32 +42,33 @@ Skapa sedan uppläsningsljud för de nya texterna (se nedan).
 
 ## Uppläsning
 
-Instruktionerna spelas upp från färdiga ljudfiler i `audio/`, inlästa med en svensk
-neural röst ([Piper](https://github.com/rhasspy/piper), rösten *nst* från KBLab/Kungliga biblioteket, CC0).
-Då låter rösten likadant på alla iPads, fungerar offline och kräver ingen nedladdad svensk systemröst.
+Instruktionerna spelas upp från färdiga ljudfiler i `audio/`, inlästa med Microsofts svenska
+neurala röst *Mattias* (`sv-SE-MattiasNeural`). Då låter rösten likadant på alla iPads,
+fungerar offline och kräver ingen nedladdad svensk systemröst.
 Finns ingen ljudfil för en text (t.ex. en ny lektion) läses den upp med enhetens inbyggda röst i stället.
 
-Ljudfilerna heter som en hash av texten, och `audio/index.json` kopplar text → fil.
+Ljuden hämtas gratis och utan konto via Edge-webbläsarens uppläsningstjänst med verktyget
+[edge-tts](https://github.com/rany2/edge-tts). Det är ingen officiell tjänst och kan sluta fungera –
+de ljudfiler som redan finns i repot påverkas inte av det. Som reserv kan skriptet i stället använda en
+fri röst som körs lokalt med [Piper](https://github.com/rhasspy/piper) (`--engine piper`).
+
+Ljudfilerna heter som en hash av röst + text, och `audio/index.json` kopplar text → fil.
 Ändrar du eller lägger till en text kör du skriptet igen – det skapar bara de filer som saknas
-och tar bort de som inte används längre.
+och tar bort de som inte används längre. Tjänsten svarar ibland ojämnt; skriptet försöker då igen.
 
 Engångsförberedelse (kräver python3 och ffmpeg):
 
 ```bash
-pip install piper-tts
-```
-
-```bash
-mkdir -p ~/piper-röster && curl -L https://github.com/rhasspy/piper/releases/download/v0.0.2/voice-sv-se-nst-medium.tar.gz | tar xz -C ~/piper-röster
+pip install edge-tts
 ```
 
 Skapa ljuden:
 
 ```bash
-python3 tools/generate_audio.py --model ~/piper-röster/sv-se-nst-medium.onnx
+python3 tools/generate_audio.py
 ```
 
-Tempo och pauser ställs in högst upp i `tools/generate_audio.py`.
+Röst och tempo ställs in högst upp i `tools/generate_audio.py`.
 
 ## Köra lokalt
 
