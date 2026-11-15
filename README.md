@@ -8,7 +8,7 @@ Ingen inloggning, inget konto, ingen server – bara en webbsida som går att l�
 ### Rita på papper ✏️
 Skärmen är läraren och barnet ritar med blyerts på eget papper. Varje lektion går igenom
 mät med handen → hjälpformer (tryck löst) → kontur (tryck hårdare) → sudda → detaljer → skuggning.
-Lektioner: björnansikte och kaninansikte. Lektionerna finns sist i `lessons.js` (`PAPER_LESSONS`).
+Lektioner: björnansikte, kaninansikte och uggla på en gren. Lektionerna finns sist i `lessons.js` (`PAPER_LESSONS`).
 
 ### Rita på skärmen 📱
 
