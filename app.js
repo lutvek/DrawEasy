@@ -297,8 +297,35 @@
       speechSynthesis.speak(u);
     } catch (e) { /* ok */ }
   }
+  // Förinspelade ljudfiler (audio/, skapas med tools/generate_audio.py) låter
+  // naturligare och likadant på alla enheter. Saknas en fil används rösten ovan.
+  let clips = {};
+  const player = new Audio();
+  player.preload = 'auto';
+  fetch('audio/index.json').then((r) => r.ok ? r.json() : {}).then((m) => { clips = m || {}; }).catch(() => {});
+  function playClip(text) {
+    const file = clips[text];
+    if (!file) return false;
+    if (hasSpeech) speechSynthesis.cancel();
+    player.pause();
+    player.src = 'audio/' + file;
+    const p = player.play();
+    // Om filen inte går att spela (t.ex. offline utan cache): läs upp med rösten i stället.
+    if (p && p.catch) p.catch((e) => { if (e && e.name !== 'AbortError' && soundOn) speakVoice(text); });
+    return true;
+  }
+  function stopSpeech() {
+    player.pause();
+    if (hasSpeech) speechSynthesis.cancel();
+  }
   function speak(text) {
-    if (!soundOn || !hasSpeech) return;
+    if (!soundOn) return;
+    if (playClip(text)) return;
+    speakVoice(text);
+  }
+  function speakVoice(text) {
+    if (!hasSpeech) return;
+    player.pause();
     loadVoices();
     if (voices.length) return speakNow(text);
     // Rösterna laddas ibland lite senare: vänta kort innan vi läser.
@@ -390,7 +417,7 @@
     holdTimer = setTimeout(() => {
       held = true;
       soundOn = !soundOn; store.set('sound', soundOn); renderSound();
-      if (!soundOn && 'speechSynthesis' in window) speechSynthesis.cancel();
+      if (!soundOn) stopSpeech();
     }, 700);
   });
   for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) {
@@ -400,7 +427,7 @@
     $('btn-speak').textContent = $('p-speak').textContent = soundOn ? '🔊' : '🔇';
   }
   $('btn-home').onclick = () => {
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    stopSpeech();
     renderHome(); show('home');
   };
 

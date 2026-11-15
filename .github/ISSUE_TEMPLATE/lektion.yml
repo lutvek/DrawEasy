@@ -1,0 +1,23 @@
+name: 🖍️ Ny lektion
+description: Önskemål om en ny teckning att lära sig
+labels: ["lektion"]
+body:
+  - type: input
+    id: motiv
+    attributes:
+      label: Vad ska man lära sig rita?
+      placeholder: t.ex. en hund, ett slott, en dinosaurie
+    validations:
+      required: true
+  - type: dropdown
+    id: lage
+    attributes:
+      label: Vilket läge?
+      options:
+        - Rita på skärmen
+        - Rita på papper
+        - Båda
+  - type: textarea
+    id: steg
+    attributes:
+      label: Förslag på steg (valfritt)
