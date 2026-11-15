@@ -103,3 +103,83 @@
     },
   ];
 })();
+
+// ---------- Rita på papper ----------
+// Koordinater: pappret är 100 brett och 141 högt (A4 på höjden).
+// Varje steg kan ha: light (hjälplinjer), dark (kontur), dots (prickar),
+// fillDark / fillHatch (skuggning), erase (id på steg som suddas), hand ('full' | 'ghost').
+(function () {
+  const C = (x, y, r) => `M${x - r} ${y} a${r} ${r} 0 1 0 ${2 * r} 0 a${r} ${r} 0 1 0 ${-2 * r} 0`;
+  const E = (x, y, rx, ry) => `M${x - rx} ${y} a${rx} ${ry} 0 1 0 ${2 * rx} 0 a${rx} ${ry} 0 1 0 ${-2 * rx} 0`;
+
+  window.PAPER_LESSONS = [
+    {
+      id: 'bjorn', name: 'Björn', bg: '#EBD8C3', level: 3,
+      zoom: '12 30 76 80',
+      steps: [
+        { id: 'hand', phase: 'Mät', view: 'paper', hand: 'full',
+          text: 'Lägg pappret på höjden. Lägg handen mitt på pappret och spreta med fingrarna.' },
+        { id: 'dots3', phase: 'Mät', view: 'paper', hand: 'full', press: 'light',
+          text: 'Sätt tre prickar: vid tummen, vid långfingret och vid lillfingret.',
+          dots: [[20, 72], [50, 42], [80, 72]] },
+        { id: 'dot4', phase: 'Mät', view: 'paper', hand: 'ghost', press: 'light',
+          text: 'Lyft handen. Sätt en prick längst ner, där handleden låg.',
+          dots: [[50, 102]] },
+        { id: 'circle', phase: 'Hjälpformer', press: 'light',
+          text: 'Rita en stor cirkel genom alla fyra prickarna. Tryck löst!',
+          light: C(50, 72, 30) },
+        { id: 'cross', phase: 'Hjälpformer', press: 'light',
+          text: 'Rita ett kors i cirkeln. En linje uppifrån och ner, och en från sida till sida.',
+          light: 'M50 42 V102 M20 70 Q50 73 80 70' },
+        { id: 'earsG', phase: 'Hjälpformer', press: 'light',
+          text: 'Rita två runda öron uppe på huvudet. Varje öra är tre fingrar brett.',
+          light: C(27, 48, 10) + C(73, 48, 10) },
+        { id: 'muzzleG', phase: 'Hjälpformer', press: 'light',
+          text: 'Rita en oval för nosen, under mitten av korset. Den är fyra fingrar bred.',
+          light: E(50, 84, 13, 10) },
+        { id: 'head', phase: 'Kontur', press: 'hard',
+          text: 'Nu trycker vi hårdare. Rita huvudet, men hoppa över där öronen sitter.',
+          dark: 'M36.6 45.2 A30 30 0 0 1 63.4 45.2 M76.3 57.5 A30 30 0 1 1 23.7 57.5' },
+        { id: 'ears', phase: 'Kontur', press: 'hard',
+          text: 'Rita öronen, och en mindre båge inuti varje öra.',
+          dark: 'M23.7 57.5 A10 10 0 1 1 36.6 45.2 M63.4 45.2 A10 10 0 1 1 76.3 57.5 ' +
+            'M23 52.2 A5.5 5.5 0 1 1 31.6 45.3 M68.4 45.3 A5.5 5.5 0 1 1 77 52.2' },
+        { id: 'muzzle', phase: 'Kontur', press: 'hard',
+          text: 'Rita nosens oval tydligt.',
+          dark: E(50, 84, 13, 10) },
+        { id: 'nose', phase: 'Kontur', press: 'hard',
+          text: 'Rita en nos som en mjuk triangel, högst upp i ovalen.',
+          dark: 'M44 78 Q50 75.5 56 78 Q56 82 50 84.5 Q44 82 44 78 Z' },
+        { id: 'mouth', phase: 'Kontur', press: 'hard',
+          text: 'Rita ett kort streck ner från nosen, och en mun som två små krokar.',
+          dark: 'M50 84.5 V88 M50 88 Q46 92.5 42 89.5 M50 88 Q54 92.5 58 89.5' },
+        { id: 'eyes', phase: 'Kontur', press: 'hard',
+          text: 'Rita två runda ögon på linjen. Ett på varje sida om mitten.',
+          dark: C(38, 70, 3.6) + C(62, 70, 3.6) },
+        { id: 'erase', phase: 'Sudda',
+          text: 'Sudda försiktigt bort prickarna och alla ljusa hjälplinjer.',
+          erase: ['dots3', 'dot4', 'circle', 'cross', 'earsG', 'muzzleG'] },
+        { id: 'eyefill', phase: 'Detaljer', press: 'hard',
+          text: 'Rita en liten ring i varje öga. Fyll resten av ögat svart, men lämna ringen vit.',
+          fillDark: C(38, 70, 3.6) + C(39.2, 68.8, 1.1) + C(62, 70, 3.6) + C(63.2, 68.8, 1.1) },
+        { id: 'fur', phase: 'Detaljer', press: 'hard',
+          text: 'Rita ögonbryn, och taggig päls på kinderna och högst upp på huvudet.',
+          dark: 'M33.5 63.5 Q38 61 42 63 M58 63 Q62 61 66.5 63.5 ' +
+            'M21.5 80 L18.5 82 L22.5 83.5 L20 86.5 L24.5 87.5 M78.5 80 L81.5 82 L77.5 83.5 L80 86.5 L75.5 87.5 ' +
+            'M46 42.5 L48 38.5 L50 42 L52 38.5 L54 42.5' },
+        { id: 'nosefill', phase: 'Skugga', press: 'hard',
+          text: 'Fyll nosen mörk. Lämna en liten ljus fläck så att nosen blänker.',
+          fillDark: 'M44 78 Q50 75.5 56 78 Q56 82 50 84.5 Q44 82 44 78 Z ' + E(47.3, 78.8, 1.6, 0.9) },
+        { id: 'earshade', phase: 'Skugga', press: 'light',
+          text: 'Skugga insidan av öronen med lätta streck åt samma håll.',
+          fillHatch: 'M23 52.2 A5.5 5.5 0 1 1 31.6 45.3 Z M68.4 45.3 A5.5 5.5 0 1 1 77 52.2 Z' },
+        { id: 'faceshade', phase: 'Skugga', press: 'light',
+          text: 'Ljuset kommer från vänster. Skugga därför högra kanten av ansiktet, och under nosen.',
+          fillHatch: 'M63.4 45.2 A30 30 0 0 1 60 100.3 A48 48 0 0 0 63.4 45.2 Z ' +
+            'M38.5 88.5 Q50 99.5 61.5 88.5 Q50 108 38.5 88.5 Z' },
+        { id: 'done', phase: 'Klar',
+          text: 'Din björn är klar! Skriv ditt namn i hörnet.' },
+      ],
+    },
+  ];
+})();

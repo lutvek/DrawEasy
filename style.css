@@ -182,3 +182,47 @@ button {
   .navbtn { height: 52px; font-size: 20px; }
   .navbtn.next { min-width: 120px; }
 }
+
+/* ---------- Rita på papper ---------- */
+.section { max-width: 1100px; width: 100%; margin: 14px auto 0; padding: 0 26px; font-size: clamp(22px, 3.4vw, 30px); }
+.section + .grid { padding-top: 10px; padding-bottom: 10px; }
+#grid { padding-bottom: 40px; }
+.card svg .tl { stroke: #b9bcc6; stroke-width: 1; }
+.card svg .fd { fill: var(--ink); stroke: none; }
+.card svg .fh { fill: rgba(43, 45, 66, .28); stroke: none; }
+
+.paper-stage { background: #E9E2D6; }
+#p-svg path, #p-svg line, #p-svg circle { stroke-linecap: round; stroke-linejoin: round; }
+#p-svg .sheet { fill: #fff; stroke: rgba(43, 45, 66, .18); stroke-width: .4; }
+#p-svg .light { fill: none; stroke: #b4b8c4; stroke-width: .55; }
+#p-svg .dark { fill: none; stroke: #33343f; stroke-width: 1; }
+#p-svg .dot { fill: #9a9eac; stroke: none; }
+#p-svg .fd { fill: #33343f; stroke: none; fill-rule: evenodd; }
+#p-svg .fh { fill: url(#hatch); stroke: none; fill-rule: evenodd; }
+#p-svg .cur { stroke: var(--accent); }
+#p-svg .cur.light { stroke-width: .9; }
+#p-svg .cur.dark { stroke-width: 1.3; }
+#p-svg .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pdraw 2.6s ease-in-out .3s 1 forwards; }
+@keyframes pdraw { to { stroke-dashoffset: 0; } }
+#p-svg .dot.cur { fill: var(--accent); animation: pulse 1s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { to { transform: scale(1.7); } }
+#p-svg .fillin { opacity: 0; animation: fillin 1.6s ease-in .3s 1 forwards; }
+@keyframes fillin { to { opacity: 1; } }
+#p-svg .erasing { animation: erasing 2.4s ease-in .6s 1 forwards; }
+#p-svg .erasing.light { stroke: #FF6B6B; }
+#p-svg .erasing.dot { fill: #FF6B6B; }
+@keyframes erasing { to { opacity: 0; } }
+#p-svg .hand line { stroke: #F2C9A0; }
+#p-svg .hand ellipse { fill: #F2C9A0; }
+#p-svg .hand { opacity: .92; }
+#p-svg .hand.ghost { opacity: .22; }
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  background: var(--card); border-radius: 18px; padding: 10px 16px; font-size: 20px; font-weight: 700;
+  box-shadow: var(--shadow); white-space: nowrap;
+}
+.chip.press.light { background: #E4EEFF; }
+.chip.press.hard { background: #2B2D42; color: #fff; }
+.chip:empty { display: none; }
+.done.paper-done img, .done.paper-done #btn-save, .done.paper-done #btn-continue { display: none; }

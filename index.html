@@ -22,6 +22,9 @@
       <h1>🎨 Rita Lätt</h1>
       <p>Vad vill du rita idag?</p>
     </header>
+    <h2 class="section">✏️ Rita på papper</h2>
+    <div id="grid-paper" class="grid"></div>
+    <h2 class="section">📱 Rita på skärmen</h2>
     <div id="grid" class="grid"></div>
     <div id="install-hint" class="install-hint" hidden>
       <span>Tips till förälder: tryck på <b>Dela</b> <span aria-hidden="true">⬆️</span> och välj <b>Lägg till på hemskärmen</b> för att få en ikon.</span>
@@ -63,6 +66,32 @@
       <div class="nav">
         <button id="btn-prev" class="navbtn prev" aria-label="Förra steget">◀</button>
         <button id="btn-next" class="navbtn next">Nästa ▶</button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Rita på papper -->
+  <main id="paper" class="screen" hidden>
+    <header class="topbar">
+      <button id="p-home" class="round" aria-label="Hem">🏠</button>
+      <div class="instruction">
+        <div id="p-dots" class="dots"></div>
+        <div id="p-text" class="step-text"></div>
+      </div>
+      <button id="p-speak" class="round" aria-label="Läs upp">🔊</button>
+    </header>
+    <div class="stage paper-stage">
+      <svg id="p-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+    </div>
+    <footer class="toolbar">
+      <div class="chips">
+        <span id="p-phase" class="chip"></span>
+        <span id="p-press" class="chip press"></span>
+      </div>
+      <button id="p-replay" class="navbtn prev">🔁 Visa igen</button>
+      <div class="nav">
+        <button id="p-prev" class="navbtn prev" aria-label="Förra steget">◀</button>
+        <button id="p-next" class="navbtn next">Nästa ▶</button>
       </div>
     </footer>
   </main>

@@ -5,6 +5,13 @@ Ingen inloggning, inget konto, ingen server – bara en webbsida som går att l�
 
 ## Vad appen kan
 
+### Rita på papper ✏️
+Skärmen är läraren och barnet ritar med blyerts på eget papper. Varje lektion går igenom
+mät med handen → hjälpformer (tryck löst) → kontur (tryck hårdare) → sudda → detaljer → skuggning.
+Första lektionen är ett björnansikte. Lektionerna finns sist i `lessons.js` (`PAPER_LESSONS`).
+
+### Rita på skärmen 📱
+
 - 9 teckningar att lära sig (sol, fisk, blomma, glass, hus, katt, bil, raket, fjäril) + **Rita fritt**
 - Varje steg visar med streckade linjer vad som ska ritas, och en röd linje visar hur man gör
 - Instruktionen läses upp på svenska (håll inne 🔊 för att stänga av/sätta på rösten)

@@ -3,6 +3,7 @@
   'use strict';
   const $ = (id) => document.getElementById(id);
   const LESSONS = window.LESSONS;
+  const PAPER = window.PAPER_LESSONS || [];
 
   const COLORS = ['#EF476F', '#FF9F1C', '#FFD23F', '#8AC926', '#2EC27E', '#4CC9F0', '#3A86FF',
     '#8E5BEF', '#FF8FC7', '#A0643C', '#F2C9A0', '#9AA0A6', '#FFFFFF'];
@@ -25,6 +26,19 @@
   }
 
   function renderHome() {
+    const pg = $('grid-paper');
+    pg.innerHTML = '';
+    for (const l of PAPER) {
+      const b = document.createElement('button');
+      b.className = 'card';
+      b.style.setProperty('--card-bg', l.bg);
+      b.innerHTML = `<svg viewBox="${l.zoom}">` + paperMarks(l, l.steps.length - 1, false) + '</svg>' +
+        `<div class="name">${l.name}</div>` +
+        `<div class="level">${'●'.repeat(l.level)}${'○'.repeat(3 - l.level)}</div>` +
+        (stars['p-' + l.id] ? '<div class="star">⭐</div>' : '');
+      b.onclick = () => openPaper(l);
+      pg.appendChild(b);
+    }
     const grid = $('grid');
     grid.innerHTML = '';
     const free = document.createElement('button');
@@ -47,7 +61,10 @@
   function show(screen) {
     $('home').hidden = screen !== 'home';
     $('draw').hidden = screen !== 'draw';
+    $('paper').hidden = screen !== 'paper';
     $('done').hidden = true;
+    $('done').classList.remove('paper-done');
+    if (screen !== 'paper') releaseWake();
   }
 
   // ---------- Rityta ----------
@@ -200,7 +217,7 @@
     document.addEventListener(ev, (e) => e.preventDefault());
   }
   document.addEventListener('touchmove', (e) => {
-    if (!$('draw').hidden) e.preventDefault();
+    if (!$('draw').hidden || !$('paper').hidden) e.preventDefault();
   }, { passive: false });
 
   // ---------- Verktyg ----------
@@ -333,7 +350,7 @@
     $('btn-speak').addEventListener(ev, () => clearTimeout(holdTimer));
   }
   function renderSound() {
-    $('btn-speak').textContent = soundOn ? '🔊' : '🔇';
+    $('btn-speak').textContent = $('p-speak').textContent = soundOn ? '🔊' : '🔇';
   }
   $('btn-home').onclick = () => {
     if ('speechSynthesis' in window) speechSynthesis.cancel();
@@ -390,6 +407,111 @@
   };
   $('btn-continue').onclick = () => { $('done').hidden = true; };
   $('btn-new').onclick = () => { renderHome(); show('home'); };
+
+  // ---------- Rita på papper ----------
+  let pLesson = null, pStep = 0, wake = null;
+
+  // Bygger SVG för allt som finns på pappret vid ett visst steg.
+  // animate=true markerar det nya steget i blått och ritar upp det.
+  function paperMarks(l, upto, animate) {
+    const erasedBy = {};
+    l.steps.forEach((s, i) => { for (const id of (s.erase || [])) erasedBy[id] = i; });
+    let fills = '', lines = '';
+    l.steps.forEach((s, i) => {
+      if (i > upto) return;
+      const gone = erasedBy[s.id];
+      if (gone !== undefined && gone < upto) return;
+      if (gone !== undefined && gone === upto && !animate) return;
+      const erasing = gone === upto ? ' erasing' : '';
+      const cur = animate && i === upto;
+      const lc = cur ? ' cur draw' : erasing;
+      const pl = cur ? ' pathLength="1"' : '';
+      if (s.fillHatch) fills += `<path class="fh${cur ? ' fillin' : ''}" d="${s.fillHatch}"/>`;
+      if (s.fillDark) fills += `<path class="fd${cur ? ' fillin' : ''}" d="${s.fillDark}"/>`;
+      if (s.light) lines += `<path class="light tl${lc}"${pl} d="${s.light}"/>`;
+      if (s.dark) lines += `<path class="dark${lc}"${pl} d="${s.dark}"/>`;
+      for (const d of (s.dots || [])) {
+        lines += `<circle class="dot${cur ? ' cur' : erasing}" cx="${d[0]}" cy="${d[1]}" r="1.1"/>`;
+      }
+    });
+    return fills + lines;
+  }
+
+  const HAND =
+    '<line x1="50" y1="97" x2="50" y2="132" stroke-width="15"/>' +
+    '<ellipse cx="50" cy="86" rx="13.5" ry="13"/>' +
+    '<line x1="41" y1="88" x2="23.5" y2="74" stroke-width="7"/>' +
+    '<line x1="43" y1="78" x2="35" y2="51" stroke-width="6"/>' +
+    '<line x1="50" y1="76" x2="50" y2="46" stroke-width="6.4"/>' +
+    '<line x1="57" y1="78" x2="65" y2="52" stroke-width="6"/>' +
+    '<line x1="60" y1="85" x2="76.5" y2="74" stroke-width="5.4"/>';
+
+  function renderPaper(announce) {
+    const s = pLesson.steps[pStep], n = pLesson.steps.length;
+    const svg = $('p-svg');
+    svg.setAttribute('viewBox', s.view === 'paper' ? '-4 -4 108 149' : pLesson.zoom);
+    svg.innerHTML =
+      '<defs><pattern id="hatch" width="1.5" height="1.5" patternUnits="userSpaceOnUse" patternTransform="rotate(-50)">' +
+      '<line x1="0" y1="0.75" x2="1.5" y2="0.75" stroke="#55586a" stroke-width="0.42"/></pattern></defs>' +
+      '<rect class="sheet" x="0" y="0" width="100" height="141" rx="1"/>' +
+      (s.hand ? `<g class="hand ${s.hand}">${HAND}</g>` : '') +
+      paperMarks(pLesson, pStep, true);
+    $('p-text').textContent = s.text;
+    const dots = $('p-dots');
+    dots.innerHTML = '';
+    for (let i = 0; i < n; i++) {
+      const d = document.createElement('i');
+      if (i <= pStep) d.className = 'on' + (i === pStep ? ' now' : '');
+      dots.appendChild(d);
+    }
+    $('p-phase').textContent = s.phase;
+    const press = $('p-press');
+    press.className = 'chip press ' + (s.press || '');
+    press.textContent = s.press === 'light' ? '🪶 Tryck löst' : s.press === 'hard' ? '✏️ Tryck hårdare' : '';
+    $('p-prev').disabled = pStep === 0;
+    $('p-next').textContent = pStep === n - 1 ? 'Klar ✓' : 'Nästa ▶';
+    if (announce) speak(s.text);
+  }
+
+  async function keepAwake() {
+    try {
+      if ('wakeLock' in navigator && !wake) {
+        wake = await navigator.wakeLock.request('screen');
+        wake.addEventListener('release', () => { wake = null; });
+      }
+    } catch (e) { wake = null; }
+  }
+  function releaseWake() {
+    if (wake) { try { wake.release(); } catch (e) { /* ok */ } wake = null; }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !$('paper').hidden) keepAwake();
+  });
+
+  function openPaper(l) {
+    pLesson = l; pStep = 0;
+    show('paper');
+    keepAwake();
+    renderPaper(true);
+  }
+  $('p-next').onclick = () => {
+    if (pStep === pLesson.steps.length - 1) {
+      stars['p-' + pLesson.id] = true; store.set('stars', stars);
+      $('done').classList.add('paper-done');
+      $('done').hidden = false;
+      confetti();
+      speak('Bra jobbat!');
+      return;
+    }
+    pStep++; renderPaper(true);
+  };
+  $('p-prev').onclick = () => { if (pStep > 0) { pStep--; renderPaper(true); } };
+  $('p-replay').onclick = () => renderPaper(true);
+  $('p-speak').onclick = () => {
+    if (!soundOn) { soundOn = true; store.set('sound', true); renderSound(); }
+    speak(pLesson.steps[pStep].text);
+  };
+  $('p-home').onclick = () => $('btn-home').onclick();
 
   // ---------- Start ----------
   window.addEventListener('resize', resize);
