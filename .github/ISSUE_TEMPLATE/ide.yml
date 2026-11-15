@@ -1,0 +1,20 @@
+name: 💡 Idé eller förbättring
+description: Förslag på något nytt eller något som kan bli bättre
+labels: ["förbättring"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Vad är problemet eller behovet?
+      description: Vad är jobbigt, saknas eller kunde vara roligare – gärna ur barnets perspektiv.
+    validations:
+      required: true
+  - type: textarea
+    id: forslag
+    attributes:
+      label: Förslag på lösning
+  - type: textarea
+    id: klart
+    attributes:
+      label: När är det klart?
+      description: Hur vet vi att det fungerar?

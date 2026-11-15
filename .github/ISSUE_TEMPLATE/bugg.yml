@@ -1,0 +1,32 @@
+name: 🐞 Bugg
+description: Något i appen fungerar inte som det ska
+labels: ["bugg"]
+body:
+  - type: textarea
+    id: vad
+    attributes:
+      label: Vad hände?
+      description: Beskriv kort vad som gick fel.
+    validations:
+      required: true
+  - type: textarea
+    id: steg
+    attributes:
+      label: Så här gör man för att det ska hända
+      placeholder: |
+        1. Öppna lektionen ...
+        2. Tryck på ...
+        3. ...
+  - type: textarea
+    id: forvantat
+    attributes:
+      label: Vad borde ha hänt?
+  - type: input
+    id: enhet
+    attributes:
+      label: Enhet och webbläsare
+      placeholder: t.ex. iPad 9:e gen, iPadOS 18, Safari / hemskärmsikon
+  - type: textarea
+    id: bilder
+    attributes:
+      label: Skärmbild eller video (valfritt)
