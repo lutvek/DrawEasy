@@ -14,7 +14,7 @@ Första lektionen är ett björnansikte. Lektionerna finns sist i `lessons.js` (
 
 - 9 teckningar att lära sig (sol, fisk, blomma, glass, hus, katt, bil, raket, fjäril) + **Rita fritt**
 - Varje steg visar med streckade linjer vad som ska ritas, och en röd linje visar hur man gör
-- Instruktionen läses upp på svenska (håll inne 🔊 för att stänga av/sätta på rösten)
+- Instruktionen läses upp på svenska med en naturlig röst (håll inne 🔊 för att stänga av/sätta på rösten)
 - Penna, färger, tre tjocklekar, sudd, ångra och rensa
 - Sista steget är att färglägga – färgerna hamnar *under* pennstrecken
 - Spara teckningen som bild när den är klar
@@ -38,6 +38,36 @@ Nu finns ikonen "Rita Lätt" på hemskärmen och appen öppnas i helskärm.
 ## Lägga till fler teckningar
 
 Alla teckningar finns i `lessons.js`. Varje steg är en text och en SVG-bana i en ruta 0–100.
+Skapa sedan uppläsningsljud för de nya texterna (se nedan).
+
+## Uppläsning
+
+Instruktionerna spelas upp från färdiga ljudfiler i `audio/`, inlästa med en svensk
+neural röst ([Piper](https://github.com/rhasspy/piper), rösten *nst* från KBLab/Kungliga biblioteket, CC0).
+Då låter rösten likadant på alla iPads, fungerar offline och kräver ingen nedladdad svensk systemröst.
+Finns ingen ljudfil för en text (t.ex. en ny lektion) läses den upp med enhetens inbyggda röst i stället.
+
+Ljudfilerna heter som en hash av texten, och `audio/index.json` kopplar text → fil.
+Ändrar du eller lägger till en text kör du skriptet igen – det skapar bara de filer som saknas
+och tar bort de som inte används längre.
+
+Engångsförberedelse (kräver python3 och ffmpeg):
+
+```bash
+pip install piper-tts
+```
+
+```bash
+mkdir -p ~/piper-röster && curl -L https://github.com/rhasspy/piper/releases/download/v0.0.2/voice-sv-se-nst-medium.tar.gz | tar xz -C ~/piper-röster
+```
+
+Skapa ljuden:
+
+```bash
+python3 tools/generate_audio.py --model ~/piper-röster/sv-se-nst-medium.onnx
+```
+
+Tempo och pauser ställs in högst upp i `tools/generate_audio.py`.
 
 ## Köra lokalt
 
