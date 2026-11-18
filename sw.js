@@ -1,7 +1,7 @@
 // Enkel service worker: hämta alltid senaste från nätet, använd cache som reserv.
 // Uppläsningsljuden (audio/*.mp3) har hash av texten i filnamnet och ändras aldrig,
 // så de laddas ner i förväg och tas från cachen direkt – då fungerar rösten även offline.
-const CACHE = 'rita-latt-v11';
+const CACHE = 'rita-latt-v12';
 const AUDIO = 'rita-latt-ljud';
 
 async function precacheAudio() {

@@ -209,9 +209,10 @@ button {
 #p-svg .erasing.light { stroke: #FF6B6B; }
 #p-svg .erasing.dot { fill: #FF6B6B; }
 @keyframes erasing { to { opacity: 0; } }
-#p-svg .hand .skin { fill: #F2C9A0; stroke: #D9A679; stroke-width: .7; }
-#p-svg .hand .crease { fill: none; stroke: #D9A679; stroke-width: .5; }
-#p-svg .hand .nail ellipse { fill: #FBE6D4; stroke: #E3B48C; stroke-width: .3; }
+#p-svg .hand .skin { fill: #8ED36B; stroke: #2E7D3A; stroke-width: .85; }
+#p-svg .hand .scale { fill: none; stroke: #57A845; stroke-width: .6; }
+#p-svg .hand .crease { fill: none; stroke: #2E7D3A; stroke-width: .55; }
+#p-svg .hand .claw { fill: #FFF4CF; stroke: #2E7D3A; stroke-width: .5; }
 #p-svg .hand { opacity: .92; }
 #p-svg .hand.ghost { opacity: .22; }
 
