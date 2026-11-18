@@ -12,7 +12,7 @@ Lektioner: björnansikte, kaninansikte, uggla på en gren, en stark grön jätte
 
 ### Rita på skärmen 📱
 
-- 9 teckningar att lära sig (sol, fisk, blomma, glass, hus, katt, bil, raket, fjäril) + **Rita fritt**
+- 10 teckningar att lära sig (sol, fisk, blomma, glass, hus, katt, bil, raket, fjäril, krokodil) + **Rita fritt**
 - Varje steg visar med streckade linjer vad som ska ritas, och en röd linje visar hur man gör
 - Instruktionen läses upp på svenska med en naturlig röst (håll inne 🔊 för att stänga av/sätta på rösten)
 - Penna, färger, tre tjocklekar, sudd, ångra och rensa

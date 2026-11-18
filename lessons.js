@@ -108,6 +108,18 @@
         { text: 'Rita prickar på vingarna.', d: C(72, 32, 5) + C(28, 32, 5) + C(68, 68, 4) + C(32, 68, 4) },
       ],
     },
+    {
+      id: 'krokodil', name: 'Krokodil', level: 3, bg: '#CDEFD9',
+      steps: [
+        { text: 'Rita en lång kropp som en ellips.', d: E(52, 55, 26, 12) },
+        { text: 'Rita ett långt huvud med en lång nos.', d: 'M32 47 Q20 41 6 46 Q1 50 6 54 L32 60' },
+        { text: 'Rita ett öga uppe på huvudet och en näsborre.', d: 'M20 44.6 Q25.5 30 31 46.5 ' + C(25.5, 40, 2.5) + C(9, 47.5, 1) },
+        { text: 'Rita en mun med vassa tänder.', d: 'M8 51 L28 54 M10 51.3 L12 54 L14 51.9 L16 54.5 L18 52.5 L20 55 L22 53.1 L24 55.5 L26 53.7' },
+        { text: 'Rita fyra korta ben.', d: 'M32 62.7 L31 74 H39 L38 65.1 M42 66.1 L42 75 H50 L48 66.9 M58 66.7 L58 75 H66 L64 65.6 M68 64.5 L69 74 H77 L74 61.4' },
+        { text: 'Rita en lång svans som blir spetsig.', d: 'M74 49 Q86 46 97 36 Q90 52 76 61' },
+        { text: 'Rita taggar längs ryggen.', d: 'M34 46 L37 41 L40 44.5 L43 39.6 L46 43.4 L49 38.9 L52 43 L55 38.9 L58 43.3 L61 39.4 L64 44.2 L67 40.7 L70 46' },
+      ],
+    },
   ];
 })();
 
